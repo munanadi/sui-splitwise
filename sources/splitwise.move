@@ -1,6 +1,5 @@
 module splitwise::splitwise { 
   use std::vector;
-  use std::string::String;
 
   use sui::object::{Self, UID};
   use sui::tx_context::{Self, TxContext};
@@ -22,26 +21,6 @@ module splitwise::splitwise {
     id: UID
   }
 
-  /// Entity represents a company that is participating in the system
-  struct Entity has key, store {
-    id: UID,
-    name: String,
-    description: String,
-    domicile: String,
-    invoices: vector<address>
-  }
-
-  /// Invoice represents the invoice that is raised in the system
-  struct Invoice has key, store {
-    id: UID,
-    title: String,
-    invoice_id: String,
-    payer: String,
-    payee: String,
-    date: u64,
-    paymentDue: u64
-  }
-
   /// Init function called when the package is published
   /// Give AdminCap to the address publishing the module
   fun init (ctx: &mut TxContext) {
@@ -58,7 +37,7 @@ module splitwise::splitwise {
   }
 
   /// Look at the number of entites registerd in splitwise module
-  public fun number_of_entities(splitwise: &Splitwise, ctx: &mut TxContext): u64 {
+  public fun number_of_entities(splitwise: &Splitwise, _ctx: &mut TxContext): u64 {
     vector::length<address>(&splitwise.entity_addresses)
   }
 

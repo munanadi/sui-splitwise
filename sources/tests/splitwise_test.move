@@ -19,7 +19,7 @@ module splitwise::test_splitwise {
 
     test_scenario::next_tx(scenario, owner);
     {
-      let splitwise_val = test_scenario::take_shared<Splitwise>(scenario);
+      let splitwise_val = test_scenario::take_from_sender<Splitwise>(scenario);
       let splitwise = &mut splitwise_val;
       let ctx = test_scenario::ctx(scenario);
 
@@ -32,19 +32,4 @@ module splitwise::test_splitwise {
 
     test_scenario::end(scenario_val);
   }
-
-  // #[test]
-  // fun test_create_entity() {
-  //   let owner = @0x1;
-
-  //   let scenario_val = test_scenario::begin(owner);
-  //   let scenario = &mut scenario_val;
-
-  //   test_scenario::next_tx(scenario, owner);
-  //   {
-  //     splitwise::create_entity(test_scenario::ctx(scenario));
-  //   };
-
-  //   test_scenario::end(scenario_val);
-  // }
 }

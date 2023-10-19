@@ -1,13 +1,13 @@
 module splitwise::invoice {
   // use std::vector;
   use std::string::{Self, String};
-  use sui::clock::{Self, Clock};
   use sui::event;
 
   use sui::object::{Self, UID};
-  // use sui::tx_context::{Self, TxContext};
+  use sui::tx_context::{Self, TxContext};
 
   use splitwise::splitwise::AdminCapability;
+  // use splitwise::entity;
 
   /// Invoice represents the invoice that is raised in the system
   struct Invoice has key, store {
@@ -17,7 +17,7 @@ module splitwise::invoice {
     payer: String,
     payee: String,
     date: u64,
-    payment_due: u64
+    payment_due: u64,
     entry_date: u64,
   }
 
@@ -45,20 +45,36 @@ module splitwise::invoice {
       payee: string::utf8(payee_bytes),
       date,
       payment_due,
-      entry_date: clock::timestamp_ms(clock)
+      entry_date: tx_context::epoch_timestamp_ms(ctx)
     };
 
-    event::emit(InvoiceCreated{ invoice_id: *&invoice_id_bytes });
+    event::emit(InvoiceCreated{ invoice_id: invoice.invoice_id });
 
     invoice
   }
 
+  /// Get the title of an entity
+  public fun get_invoice_title(invoice: &Invoice): &String {
+    &invoice.title
+  }
 
-  /// Add an invoice to a entities invoices list
-  public fun add_invoice_to_list(entity: &mut Entity, invoice: &Invoice, ctx: &mut TxContext) {
-    let add = object::uid_to_address(&invoice.id);
-    // entity.invoices.push_back<address>(&mut entity.invoices, 10);
-    vector::push_back<address>(&mut entity.invoices, add);
-  }  
+  /// Get the invoice_id of an entity
+  public fun get_invoice_invoice_id(invoice: &Invoice): &String {
+    &invoice.invoice_id
+  }
 
+  /// Get the payer of an entity
+  public fun get_invoice_payer(invoice: &Invoice): &String {
+    &invoice.payer
+  }
+  
+  /// Get the payee of an entity
+  public fun get_invoice_payee(invoice: &Invoice): &String {
+    &invoice.payee
+  }
+
+  /// Get address of the invoice's id
+  public fun get_invoice_address(invoice: &Invoice): address {
+    object::id_address(invoice)
+  }
 }
