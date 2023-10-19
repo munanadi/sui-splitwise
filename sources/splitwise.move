@@ -1,13 +1,13 @@
 module splitwise::splitwise { 
   use std::vector;
-  use std::string::{Self, String};
+  use std::string::String;
 
   use sui::object::{Self, UID};
   use sui::tx_context::{Self, TxContext};
   use sui::transfer;
-  use sui::balance::{Self, Balance};
-  use sui::coin::{Self, Coin};
-  use sui::pay;
+  // use sui::balance::{Self, Balance};
+  // use sui::coin::{Self, Coin};
+  // use sui::pay;
 
   /// @description Splitwise is the contract that oversees all this
   /// Have a masterlist of all entities

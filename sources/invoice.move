@@ -1,9 +1,11 @@
 module splitwise::invoice {
-  use std::vector;
+  // use std::vector;
   use std::string::{Self, String};
+  use sui::clock::{Self, Clock};
+  use sui::event;
 
   use sui::object::{Self, UID};
-  use sui::tx_context::{Self, TxContext};
+  // use sui::tx_context::{Self, TxContext};
 
   use splitwise::splitwise::AdminCapability;
 
@@ -15,7 +17,13 @@ module splitwise::invoice {
     payer: String,
     payee: String,
     date: u64,
-    paymentDue: u64
+    payment_due: u64
+    entry_date: u64,
+  }
+
+  /* Events */
+  struct InvoiceCreated has copy, drop {
+    invoice_id: String
   }
 
   /// Create an Invoice
@@ -26,18 +34,23 @@ module splitwise::invoice {
     payer_bytes: vector<u8>,
     payee_bytes: vector<u8>,
     date: u64,
-    paymentDue: u64,
+    payment_due: u64,
     ctx: &mut TxContext 
   ) : Invoice {
-    Invoice {
+    let invoice = Invoice {
       id: object::new(ctx),
       title: string::utf8(title_bytes),
       invoice_id: string::utf8(invoice_id_bytes),
       payer: string::utf8(payer_bytes),
       payee: string::utf8(payee_bytes),
       date,
-      paymentDue
-    }
+      payment_due,
+      entry_date: clock::timestamp_ms(clock)
+    };
+
+    event::emit(InvoiceCreated{ invoice_id: *&invoice_id_bytes });
+
+    invoice
   }
 
 

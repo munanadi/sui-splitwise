@@ -2,8 +2,8 @@
 module splitwise::test_splitwise {
   use splitwise::splitwise::{Self, Splitwise};
   use sui::test_scenario;
-  use sui::test_utils;
-  use sui::tx_context;
+  // use sui::test_utils;
+  // use sui::tx_context;
 
   #[test]
   fun test_create_splitwise() {

@@ -43,7 +43,8 @@ The `Invoice` structure represents an invoice raised in the system. It has the f
 - `payer`: The entity responsible for paying the invoice.
 - `payee`: The entity to receive payment.
 - `date`: The date when the invoice was created.
-- `paymentDue`: The deadline for payment.
+- `payment_due`: The deadline for payment.
+- `entry_date`: The time invoice was entered into the system
 
 ## Initialization
 

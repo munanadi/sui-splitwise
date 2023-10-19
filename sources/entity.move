@@ -1,6 +1,7 @@
 module splitwise::entity {
   use std::vector;
   use std::string::{Self, String};
+  use std::event;
 
   use sui::object::{Self, UID};
   use sui::tx_context::{Self, TxContext};
@@ -16,6 +17,12 @@ module splitwise::entity {
     invoices: vector<address>
   }
 
+  /* Events */
+  struct EntityCreated has copy, drop {
+    name: String,
+    id: UID
+  }
+
   /// Create an entity
   /// This will create a entity
   public fun create_entity(
@@ -25,12 +32,16 @@ module splitwise::entity {
     domicile_bytes: vector<u8>, 
     ctx: &mut TxContext
   ) : Entity {
-    Entity {
+    let entity = Entity {
       id: object::new(ctx),
       name: string::utf8(name_bytes),
       description: string::utf8(description_bytes),
       domicile: string::utf8(domicile_bytes),
       invoices: vector::empty<address>()
-    }
+    };
+
+    event::emit(EntityCreated{ name: *&name_bytes, id });
+
+    entity
   }
 }
