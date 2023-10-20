@@ -1,21 +1,50 @@
 import { useState } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import {
+  useCurrentAccount,
+  useSuiClient,
+  useSuiClientContext,
+  useSuiClientInfiniteQuery,
+} from "@mysten/dapp-kit";
 import { isValidSuiObjectId } from "@mysten/sui.js/utils";
 import { Counter } from "./Counter";
 import { CreateCounter } from "./CreateCounter";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import useOwnedObjects from "./hooks/useOwnedObjects";
+import { getExplorerLink } from "@/lib/explorerUtils";
+import { Button } from "./components/ui/button";
+import { useToast } from "./components/ui/use-toast";
 
 function Home() {
-  const [counterId, setCounter] = useState(() => {
-    const hash = window.location.hash.slice(1);
-    return isValidSuiObjectId(hash) ? hash : null;
-  });
+  const client = useSuiClient();
+  const account = useCurrentAccount();
+  const ctx = useSuiClientContext();
+  const { toast } = useToast();
 
-  const currentAccount = useCurrentAccount();
+  const { allObjects, error, moduleObjects } = useOwnedObjects(account, client);
 
-  if (!currentAccount) {
+  if (!account) {
     return <h1 className="text-4xl mt-4">Please Connect Wallet</h1>;
   }
+
+  const isSplitwisePresent = Object.keys(moduleObjects).includes("Splitwise");
+  const splitwiseDetails = isSplitwisePresent
+    ? moduleObjects["Splitwise"]
+    : null;
+
+  const isAdminCapPresent =
+    Object.keys(moduleObjects).includes("AdminCapability");
+  const AdminCapDetails =
+    isSplitwisePresent && moduleObjects["AdminCapability"];
+
+  // console.log(splitwiseDetails);
+
+  const createSplitwise = () => {
+    console.log("createSplitwise");
+
+    toast({
+      title: `Created Splitwise`,
+    });
+  };
 
   return (
     <>
@@ -42,21 +71,45 @@ function Home() {
         </div>
       </div>
 
-      <div className="mt-5 pt-2 px-4 min-h-[500px]">
-        {currentAccount ? (
-          counterId ? (
-            <Counter id={counterId} />
+      <div className="flex flex-col gap-4 mt-5 px-4 min-h-[500px] text-white">
+        {isSplitwisePresent ? (
+          splitwiseDetails && splitwiseDetails.objectId ? (
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <p>Splitwise Structure : {splitwiseDetails.objectId}</p>
+                <Button>
+                  <a
+                    target="_blank"
+                    href={getExplorerLink.object(
+                      splitwiseDetails.objectId,
+                      "local"
+                    )}
+                  >
+                    Visit
+                  </a>
+                </Button>
+              </div>
+            </div>
           ) : (
-            <CreateCounter
-              onCreated={(id) => {
-                window.location.hash = id;
-                setCounter(id);
-              }}
-            />
+            <p>Error Fetching details</p>
           )
         ) : (
-          <h3>Please connect your wallet</h3>
+          <Button onClick={createSplitwise}>Create Splitwise</Button>
         )}
+
+        {isAdminCapPresent && AdminCapDetails && AdminCapDetails.objectId ? (
+          <div className="flex items-center gap-2">
+            <p>AdminCap Structure : {AdminCapDetails.objectId}</p>
+            <Button>
+              <a
+                target="_blank"
+                href={getExplorerLink.object(AdminCapDetails.objectId, "local")}
+              >
+                Visit
+              </a>
+            </Button>
+          </div>
+        ) : null}
       </div>
     </>
   );

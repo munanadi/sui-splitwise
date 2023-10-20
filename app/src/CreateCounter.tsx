@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { TransactionBlock } from "@mysten/sui.js/transactions";
 import {
   getFaucetHost,
@@ -11,7 +12,10 @@ import {
   useSuiClient,
   useCurrentAccount,
   useSuiClientQuery,
+  useSuiClientContext,
 } from "@mysten/dapp-kit";
+import { SuiObjectResponse } from "@mysten/sui.js/client";
+import useOwnedObjects from "./hooks/useOwnedObjects";
 
 export function CreateCounter({
   onCreated,
@@ -20,35 +24,16 @@ export function CreateCounter({
 }) {
   const client = useSuiClient();
   const account = useCurrentAccount();
-  const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
-  const { data, isLoading, error } = useSuiClientQuery(
-    "getOwnedObjects",
-    { owner: account?.address as string },
-    { enabled: !!account }
-  );
 
-  const {
-    data: balanceData,
-    isLoading: balanceDataLoading,
-    error: balanceDataError,
-  } = useSuiClientQuery(
-    "getBalance",
-    { owner: account?.address as string },
-    { enabled: !!account }
-  );
+  const { allObjects, error, moduleObjects } = useOwnedObjects(account, client);
 
-  const {
-    data: coinBalancesData,
-    isLoading: coinBalancesLoading,
-    error: coinBalancesError,
-  } = useSuiClientQuery(
-    "getAllBalances",
-    { owner: account?.address as string },
-    { enabled: !!account }
-  );
+  // const { selectNetwork } = useSuiClientContext();
+  // const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
+
+  console.log(moduleObjects);
 
   return (
-    <div className="container">
+    <div className="container overflow-auto">
       <Button
         onClick={() => {
           create();
@@ -62,78 +47,10 @@ export function CreateCounter({
           <p>Wallet connected</p>
           <p>Address: {account.address}</p>
           <p>Network: {account.chains}</p>
+          <p>{JSON.stringify(allObjects, null, 2)}</p>
         </div>
       ) : (
         <p>Wallet not connected</p>
-      )}
-
-      {/* Object owned by the connected wallet */}
-      {error ? (
-        <p>Something went wrong</p>
-      ) : isLoading || !data ? (
-        <p>Loading....</p>
-      ) : (
-        <div className="flex flex-col my-2">
-          {data.data.length === 0 ? (
-            <p>No objects owned by the connected wallet</p>
-          ) : (
-            <h3>Objects owned by the connected wallet</h3>
-          )}
-          {data.data.map((object) => (
-            <div key={object.data?.objectId}>
-              <p>Object ID: {object.data?.objectId}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Coin Balances */}
-      {coinBalancesError ? (
-        <p>Something went wrong</p>
-      ) : coinBalancesLoading || !coinBalancesData ? (
-        <p>Loading....</p>
-      ) : (
-        <div className="flex flex-col my-2">
-          {coinBalancesData.length === 0 ? (
-            <p>No objects owned by the connected wallet</p>
-          ) : (
-            <h3>Coin balances by the connected wallet</h3>
-          )}
-          {coinBalancesData.map((object) => (
-            <div key={object?.coinType.toString()}>
-              <p>Object ID: {object?.coinObjectCount}</p>
-              <p>
-                Locked Balance: {JSON.stringify(object.lockedBalance, null, 2)}
-              </p>
-              <p>Total Balance: {object?.totalBalance}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Balance */}
-      {balanceDataError ? (
-        <p>Something went wrong</p>
-      ) : balanceDataLoading || !balanceData ? (
-        <p>Loading....</p>
-      ) : (
-        <div className="flex flex-col my-2">
-          {!balanceData ? (
-            <p>No objects owned by the connected wallet</p>
-          ) : (
-            <h3>Balance by the connected wallet</h3>
-          )}
-          {
-            <div key={balanceData?.coinType.toString()}>
-              <p>Object ID: {balanceData?.coinObjectCount}</p>
-              <p>
-                Locked Balance:{" "}
-                {JSON.stringify(balanceData.lockedBalance, null, 2)}
-              </p>
-              <p>Total Balance: {balanceData?.totalBalance}</p>
-            </div>
-          }
-        </div>
       )}
     </div>
   );
@@ -143,54 +60,47 @@ export function CreateCounter({
       return;
     }
 
-    const s = await client.getAllBalances({ owner: account.address });
-    console.log(s);
+    // const txb = new TransactionBlock();
+    // txb.setSender(account.address);
+    // txb.setGasBudget(100000000);
 
-    const txb = new TransactionBlock();
+    // const coin = txb.splitCoins(txb.gas, [txb.pure(10000)]);
+    // txb.transferObjects([coin], txb.pure(account.address));
 
-    txb.setSender(account.address);
+    // txb.moveCall({
+    //   arguments: [coin],
+    //   // arguments: [],
+    //   target: `${PACKAGE_ID}::entity::create_entity`,
+    // });
 
-    txb.setGasBudget(100000000);
+    // try {
+    //   signAndExecute(
+    //     {
+    //       transactionBlock: txb,
+    //       options: {
+    //         showEffects: true,
+    //         showObjectChanges: true,
+    //       },
+    //     },
+    //     {
+    //       onSuccess: (tx) => {
+    //         client
+    //           .waitForTransactionBlock({
+    //             digest: tx.digest,
+    //           })
+    //           .then(() => {
+    //             console.log(tx);
+    //             const objectId = tx.effects?.created?.[0]?.reference?.objectId;
 
-    const coin = txb.splitCoins(txb.gas, [txb.pure(1)]);
-    txb.transferObjects([coin], txb.pure(account.address));
-
-    console.log(coin);
-
-    txb.moveCall({
-      arguments: [coin],
-      // arguments: [],
-      target: `${PACKAGE_ID}::counter::create`,
-    });
-
-    try {
-      signAndExecute(
-        {
-          transactionBlock: txb,
-          options: {
-            showEffects: true,
-            showObjectChanges: true,
-          },
-        },
-        {
-          onSuccess: (tx) => {
-            client
-              .waitForTransactionBlock({
-                digest: tx.digest,
-              })
-              .then(() => {
-                console.log(tx);
-                const objectId = tx.effects?.created?.[0]?.reference?.objectId;
-
-                if (objectId) {
-                  onCreated(objectId);
-                }
-              });
-          },
-        }
-      );
-    } catch (e) {
-      console.log(e, "error message");
-    }
+    //             if (objectId) {
+    //               onCreated(objectId);
+    //             }
+    //           });
+    //       },
+    //     }
+    //   );
+    // } catch (e) {
+    //   console.log(e, "error message");
+    // }
   }
 }

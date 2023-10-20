@@ -1,10 +1,14 @@
-import { ConnectButton } from "@mysten/dapp-kit";
+import {
+  ConnectButton,
+  useCurrentAccount,
+  useSuiClientContext,
+} from "@mysten/dapp-kit";
 import { Link } from "react-router-dom";
 
 function NavBar() {
   return (
     <div className="relative text-white">
-      <div className="mx-auto px-4 sm:px-6">
+      <div className="mx-auto mt-1 sm:px-6">
         <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
           <div className="lg:w-0 lg:flex-1">
             <a href="#" className="flex">

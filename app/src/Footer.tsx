@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className=" max-w-7xl bg-black text-white px-1 pt-12 pb-1 text-center fixed bottom-0 w-full">
+    <footer className=" max-w-7xl bg-black text-white px-1 my-1 text-center w-full">
       <hr className="mx-auto border-0 border-t-2 border-white mb-1" />
       <div className="flex justify-between items-center">
         <p className="text-center text-sm leading-loose md:text-left">

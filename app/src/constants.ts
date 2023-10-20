@@ -1,2 +1,3 @@
 export const PACKAGE_ID =
-  "0x67237bf85a80899c69646587973bde20e1cc32536a879f1b7dd1645c207fde76";
+  "0x522addeb4e239e5dd92f7357f74a29a74547b59cd7b8e4ddf980fab2ec28ed06";
+export const PACKAGE_NAME = "splitwise";
