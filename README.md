@@ -72,19 +72,37 @@ Test cases are provided to ensure the functionality of the smart contract.
 
 `app` dir contains the whole frontend of the app.
 
-
 ## Local dev
 
 > Make sure to have sui binaries installed.  
-Check with `sui --verison`
+> Check with `sui --verison`
 
 To start the sui node
+
 ```bash
 RUST_LOG="consensus=off" sui-test-validator
 ```
 
 To publish the package
+
 ```bash
 sui client publish --gas-budget 200000000 .
 ```
 
+To find the active address
+
+```bash
+sui client active-address
+```
+
+To get fas from local faucet
+
+```bash
+ curl --location --request POST 'http://127.0.0.1:9123/gas' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "FixedAmountRequest": {
+        "recipient": "<YOUR_ADDRESS_HERE>"
+    }
+}'
+```

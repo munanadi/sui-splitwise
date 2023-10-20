@@ -74,6 +74,7 @@ function useOwnedObjects(
         });
 
         setAllObjects(nogasOwnedObjectDetails);
+        console.log()
 
         const moduleRelatedObjects = nogasOwnedObjectDetails.filter(
           ({ data }) => data?.type?.includes(`${PACKAGE_ID}::${PACKAGE_NAME}`)

@@ -6,7 +6,7 @@ module splitwise::invoice {
   use sui::object::{Self, UID};
   use sui::tx_context::{Self, TxContext};
 
-  use splitwise::splitwise::AdminCapability;
+  use splitwise::group::AdminCapability;
   // use splitwise::entity;
 
   // Invoice represents the invoice that is raised in the system

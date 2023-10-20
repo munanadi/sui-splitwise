@@ -5,7 +5,7 @@ module splitwise::test_entity {
   use sui::transfer;
   use sui::tx_context;
 
-  use splitwise::splitwise::AdminCapability;
+  use splitwise::group::AdminCapability;
   use splitwise::entity::{
     get_entity_name, 
     get_entity_description, 
