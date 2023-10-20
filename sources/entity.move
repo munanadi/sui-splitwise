@@ -6,7 +6,6 @@ module splitwise::entity {
   use sui::object::{Self, UID};
   use sui::tx_context::TxContext;
 
-  use splitwise::splitwise::AdminCapability;
   use splitwise::invoice::{Invoice, get_invoice_address};
 
   // Entity represents a company that is participating in the system
@@ -26,7 +25,6 @@ module splitwise::entity {
   // Create an entity
   // This will create a entity
   public fun create_entity(
-    _: &AdminCapability, 
     name_bytes: vector<u8>, 
     description_bytes: vector<u8>, 
     domicile_bytes: vector<u8>, 

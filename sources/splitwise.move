@@ -61,6 +61,11 @@ module splitwise::splitwise {
     vector::length<address>(&group.entity_addresses)
   }
 
+  // Expose the group id to public
+  public fun group_id(group: &Group, ctx: &mut TxContext): address {
+    object::uid_to_address(&group.id)
+  }
+
   #[test_only]
   public fun init_for_testing(ctx: &mut TxContext){
     init(ctx);

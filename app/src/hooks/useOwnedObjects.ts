@@ -13,12 +13,14 @@ import {
 import { WalletAccount } from "@wallet-standard/base";
 import { useEffect, useState } from "react";
 import { PACKAGE_ID, PACKAGE_NAME } from "@/constants";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 
 interface OwnedObjects {
   allObjects: SuiObjectResponse[];
   gasObjectIds: string[];
   moduleObjects: { [key: string]: SuiObjectData };
   error: boolean;
+  sharedIds: string[];
 }
 
 function useOwnedObjects(
@@ -30,6 +32,9 @@ function useOwnedObjects(
     [key: string]: SuiObjectData;
   }>({});
   const [gasObjectIds, setGasObjectIds] = useState<string[]>([]);
+  const [sharedIds, setSharedIds] = useState<string[]>([]);
+
+  const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
 
   const {
     data: allOwnedObjects,
@@ -53,7 +58,23 @@ function useOwnedObjects(
 
   useEffect(() => {
     async function fetchObjects() {
+      if (!account?.address) {
+        return;
+      }
+
       if (allCoinObjects && allOwnedObjects) {
+        // Get all shared ids
+        const txb = new TransactionBlock();
+        txb.moveCall({
+          target: `${PACKAGE_ID}::${PACKAGE_NAME}::group_id`,
+        });
+
+        const d = await client.devInspectTransactionBlock({
+          transactionBlock: txb,
+          sender: account?.address,
+        });
+        console.log(d);
+
         // If all the fetches went okay to get all coins and objects
         const allCoinIds = allCoinObjects.data.map((obj) => obj.coinObjectId);
 
@@ -104,6 +125,7 @@ function useOwnedObjects(
       allObjects: [],
       moduleObjects: {},
       gasObjectIds: [],
+      sharedIds: [],
     };
   }
 
@@ -112,6 +134,7 @@ function useOwnedObjects(
     error: false,
     moduleObjects,
     gasObjectIds,
+    sharedIds,
   };
 }
 
