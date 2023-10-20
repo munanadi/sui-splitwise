@@ -28,6 +28,12 @@ function NavBar() {
             >
               Transactions
             </Link>
+            <Link
+              to={"/add-transaction"}
+              className="text-base font-medium  dark:text-white"
+            >
+              Add Transaction
+            </Link>
             <ConnectButton />
           </nav>
         </div>

@@ -6,6 +6,7 @@ import NotFound from "./NotFound";
 import Footer from "./Footer";
 import Transactions from "./Transactions";
 import { Toaster } from "@/components/ui/toaster";
+import AddTransaction from "./AddTransaction";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/transactions" element={<Transactions />} />
+          <Route path="/add-transaction" element={<AddTransaction />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </div>
