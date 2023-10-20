@@ -31,7 +31,7 @@ const AddTransaction = () => {
 
   const addTransaction = () => {
     toast({
-      title: "Add Transaction",
+      title: `Add Transaction for ${payer} - ${payee}`,
     });
   };
 
@@ -44,7 +44,7 @@ const AddTransaction = () => {
         <Input
           id="invoiceId"
           type="text"
-          className="w-full px-3 py-2 bg-white text-white"
+          className="w-full px-3 py-2 bg-white text-black"
           placeholder="Invoice ID"
           value={invoiceId}
           onChange={(e) => setInvoiceId(e.target.value)}
@@ -57,7 +57,7 @@ const AddTransaction = () => {
         <Input
           id="title"
           type="text"
-          className="w-full px-3 py-2 bg-white text-white"
+          className="w-full px-3 py-2 bg-white text-black"
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -104,7 +104,7 @@ const AddTransaction = () => {
         <Input
           id="amount"
           type="number"
-          className="w-full px-3 py-2 bg-white text-white"
+          className="w-full px-3 py-2 bg-white text-black"
           placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -124,7 +124,7 @@ const AddTransaction = () => {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={(date) => date && setDate(date)}
               initialFocus
             />
           </PopoverContent>
@@ -142,7 +142,7 @@ const AddTransaction = () => {
             <Calendar
               mode="single"
               selected={dueDate}
-              onSelect={setDueDate}
+              onSelect={(date) => date && setDate(date)}
               initialFocus
             />
           </PopoverContent>
