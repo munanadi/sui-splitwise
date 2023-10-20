@@ -1,6 +1,6 @@
 # Splitwise Smart Contract
 
-The Splitwise smart contract is designed for the SUI blockchain and allows users to manage entities, invoices, and transactions within the Splitwise platform.
+The Splitwise smart contract is designed for the SUI blockchain and allows users to manage entities, invoices, and transactions within the Splitwise platform. Try it out [here](https://sui-splitwise.vercel.app/)
 
 ## Table of Contents
 
