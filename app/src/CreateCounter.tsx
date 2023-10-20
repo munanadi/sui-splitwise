@@ -47,35 +47,6 @@ export function CreateCounter({
     { enabled: !!account }
   );
 
-  async function getFunds() {
-    if (!account?.address) {
-      return;
-    }
-
-    const faucetHost = getFaucetHost("localnet");
-    const result = await requestSuiFromFaucetV1({
-      host: faucetHost,
-      recipient: account.address,
-      headers: [
-        ["Access-Control-Allow-Origin", "*"],
-        [
-          "Access-Control-Allow-Headers",
-          "Origin, X-Requested-With, Content-Type, Accept",
-        ],
-      ],
-    });
-
-    if (!result.task) {
-      return;
-    }
-
-    const t = await getFaucetRequestStatus({
-      host: faucetHost,
-      taskId: result.task,
-    });
-    console.log(t.status, t.error);
-  }
-
   return (
     <div className="container">
       <Button
@@ -86,19 +57,11 @@ export function CreateCounter({
         Create Counter
       </Button>
 
-      {/* Faucet button */}
-      <Button
-        onClick={() => {
-          getFunds();
-        }}
-      >
-        Get Funds
-      </Button>
-
       {account ? (
         <div className="flex flex-col">
           <p>Wallet connected</p>
           <p>Address: {account.address}</p>
+          <p>Network: {account.chains}</p>
         </div>
       ) : (
         <p>Wallet not connected</p>

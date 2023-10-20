@@ -1,6 +1,5 @@
-import { Alert } from "@/components/ui/alert";
-import { AlertDescription } from "@/components/ui/alert";
-import { AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -10,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Terminal } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -75,7 +73,6 @@ function Transactions() {
   const settleTransaction = (id: string) => {
     toast({
       title: `settle transaction ${id}`,
-      
     });
   };
 
