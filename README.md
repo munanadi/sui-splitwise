@@ -12,6 +12,7 @@ The Splitwise smart contract is designed for the SUI blockchain and allows users
 - [Initialization](#initialization)
 - [Functions](#functions)
 - [Test Cases](#test-cases)
+- [React App](#react-app)
 
 ## Structures
 
@@ -65,6 +66,10 @@ The `init` function is called when the package is published. It initializes the 
 Test cases are provided to ensure the functionality of the smart contract.
 
 - `test_create_splitwise`: Tests the creation of the Splitwise contract and checks if the initial entity count is zero.
+
+## React App
+
+`app` dir contains the whole frontend of the app.
 
 <!-- Uncomment and modify this section if you have additional test cases -->
 
