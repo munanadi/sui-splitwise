@@ -2,10 +2,12 @@ import { useState } from "react";
 import {
   useCurrentAccount,
   useSignAndExecuteTransactionBlock,
+  useCurrentWallet,
   useSuiClient,
   useSuiClientContext,
   useSuiClientInfiniteQuery,
 } from "@mysten/dapp-kit";
+import { PublicKey } from "@mysten/sui.js/cryptography";
 import { isValidSuiObjectId } from "@mysten/sui.js/utils";
 import { Counter } from "./Counter";
 import { CreateCounter } from "./CreateCounter";
@@ -26,7 +28,10 @@ function Home() {
   const ctx = useSuiClientContext();
   const { toast } = useToast();
 
-  const { allObjects, error, moduleObjects } = useOwnedObjects(account, client);
+  const { allObjects, error, moduleObjects, gasObjectIds } = useOwnedObjects(
+    account,
+    client
+  );
   const { mutate: signAndExecute } = useSignAndExecuteTransactionBlock();
 
   if (!account) {
@@ -75,8 +80,8 @@ function Home() {
       const addressList = (data?.data?.content as any)?.fields
         .entity_addresses as string[];
       addressFound = addressList.includes(account.address);
-      console.log(addressList, groupAdd)
-      console.log({addressFound})
+      // console.log(addressList, groupAdd);
+      // console.log({ addressFound });
       if (addressFound) {
         toast({
           title: `You're already in this group!`,
@@ -89,25 +94,28 @@ function Home() {
     const txb = new TransactionBlock();
     txb.setSenderIfNotSet(account.address);
     txb.setGasBudget(100000000);
-    
-    const coin = txb.splitCoins(txb.gas, [txb.pure(1)]);
-    
+
+    const coin = txb.splitCoins(txb.gas, [txb.pure(1000)]);
+
+    txb.transferObjects([coin], txb.pure.address(account.address));
+
+    const initialSharedVersion = (data?.data?.owner as any)?.Shared.initial_shared_version;
+    console.log(initialSharedVersion)
+
     const splitwiseSharedObject = txb.sharedObjectRef({
       mutable: true,
-      initialSharedVersion: data?.data?.version,
+      initialSharedVersion,
       objectId: data?.data?.objectId,
     });
-    
-    txb.transferObjects([coin, splitwiseSharedObject], account.address);
 
     txb.moveCall({
-      target: `${PACKAGE_ID}::group::add_new_entites`,
+      target: `${PACKAGE_ID}::splitwise::add_new_entites`,
       arguments: [splitwiseSharedObject, txb.pure.address(account.address)],
       typeArguments: [],
     });
 
     // console.log(splitwiseSharedObject)
-    console.log(txb.blockData)
+    console.log(txb.blockData);
 
     try {
       signAndExecute(
@@ -187,7 +195,7 @@ function Home() {
     // }
 
     toast({
-      title: `Created a new group!`,
+      title: `Need to implement this one`,
     });
   };
 

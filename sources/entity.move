@@ -6,7 +6,7 @@ module splitwise::entity {
   use sui::object::{Self, UID};
   use sui::tx_context::TxContext;
 
-  use splitwise::group::AdminCapability;
+  use splitwise::splitwise::AdminCapability;
   use splitwise::invoice::{Invoice, get_invoice_address};
 
   // Entity represents a company that is participating in the system

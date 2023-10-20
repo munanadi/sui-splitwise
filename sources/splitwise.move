@@ -1,4 +1,4 @@
-module splitwise::group { 
+module splitwise::splitwise { 
   use std::vector;
 
   use sui::object::{Self, UID};
@@ -16,6 +16,10 @@ module splitwise::group {
     entity_addresses: vector<address>
   }
 
+  struct Splitwise has key, store {
+    id: UID
+  }
+
   /// Admin rights
   struct AdminCapability has key {
     id: UID
@@ -24,7 +28,13 @@ module splitwise::group {
   /// Init function called when the package is published
   /// Give AdminCap to the address publishing the module
   fun init (ctx: &mut TxContext) {
-    // Create the Spitwise Object
+    // Create the Splitwise object
+    let splitwise = Splitwise {
+      id: object::new(ctx)
+    };
+    transfer::transfer(splitwise, tx_context::sender(ctx));
+
+    // Create the Group Object
     let group = Group {
       id: object::new(ctx),
       entity_addresses: vector::empty<address>()

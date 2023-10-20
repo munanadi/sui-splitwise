@@ -89,6 +89,10 @@ To publish the package
 sui client publish --gas-budget 200000000 .
 ```
 
+![Alt text](./images/image.png)
+
+> Replace the `PACKAGE_ID` in `app/src/constants.ts` from the output above. Pick the Immutable one
+
 To find the active address
 
 ```bash

@@ -1,6 +1,6 @@
 #[test_only]
 module splitwise::test_splitwise {
-  use splitwise::group::{Self, Group};
+  use splitwise::splitwise::{Self, Group};
   use sui::test_scenario;
   // use sui::test_utils;
   // use sui::tx_context;
@@ -14,7 +14,7 @@ module splitwise::test_splitwise {
 
     test_scenario::next_tx(scenario, owner);
     { 
-      group::init_for_testing(test_scenario::ctx(scenario));
+      splitwise::init_for_testing(test_scenario::ctx(scenario));
     };
 
     test_scenario::next_tx(scenario, owner);
@@ -23,7 +23,7 @@ module splitwise::test_splitwise {
       let splitwise = &mut splitwise_val;
       let ctx = test_scenario::ctx(scenario);
 
-      let entities_count = group::number_of_entities(splitwise, ctx);
+      let entities_count = splitwise::number_of_entities(splitwise, ctx);
       // Initiall the vector should be empty
       assert!(entities_count == 0, 0); 
 

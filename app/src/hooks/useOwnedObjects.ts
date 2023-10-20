@@ -16,6 +16,7 @@ import { PACKAGE_ID, PACKAGE_NAME } from "@/constants";
 
 interface OwnedObjects {
   allObjects: SuiObjectResponse[];
+  gasObjectIds: string[];
   moduleObjects: { [key: string]: SuiObjectData };
   error: boolean;
 }
@@ -28,6 +29,7 @@ function useOwnedObjects(
   const [moduleObjects, setModuleObjects] = useState<{
     [key: string]: SuiObjectData;
   }>({});
+  const [gasObjectIds, setGasObjectIds] = useState<string[]>([]);
 
   const {
     data: allOwnedObjects,
@@ -73,9 +75,6 @@ function useOwnedObjects(
           },
         });
 
-        setAllObjects(nogasOwnedObjectDetails);
-        console.log()
-
         const moduleRelatedObjects = nogasOwnedObjectDetails.filter(
           ({ data }) => data?.type?.includes(`${PACKAGE_ID}::${PACKAGE_NAME}`)
         );
@@ -91,6 +90,8 @@ function useOwnedObjects(
           }
         });
 
+        setGasObjectIds(allCoinIds);
+        setAllObjects(nogasOwnedObjectDetails);
         setModuleObjects(moduleObjectsMap);
       }
     }
@@ -102,6 +103,7 @@ function useOwnedObjects(
       error: true,
       allObjects: [],
       moduleObjects: {},
+      gasObjectIds: [],
     };
   }
 
@@ -109,6 +111,7 @@ function useOwnedObjects(
     allObjects,
     error: false,
     moduleObjects,
+    gasObjectIds,
   };
 }
 
