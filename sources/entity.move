@@ -9,7 +9,7 @@ module splitwise::entity {
   use splitwise::splitwise::AdminCapability;
   use splitwise::invoice::{Invoice, get_invoice_address};
 
-  /// Entity represents a company that is participating in the system
+  // Entity represents a company that is participating in the system
   struct Entity has key, store {
     id: UID,
     name: String,
@@ -23,8 +23,8 @@ module splitwise::entity {
     name: String
   }
 
-  /// Create an entity
-  /// This will create a entity
+  // Create an entity
+  // This will create a entity
   public fun create_entity(
     _: &AdminCapability, 
     name_bytes: vector<u8>, 
@@ -46,30 +46,33 @@ module splitwise::entity {
   }
 
 
-  /// Add an invoice to a entities invoices list
+  // Add an invoice to a entities invoices list
   public fun add_invoice_to_list(entity: &mut Entity, invoice: &Invoice, _ctx: &mut TxContext) {
     let add = get_invoice_address(invoice);
     // entity.invoices.push_back<address>(&mut entity.invoices, 10);
     vector::push_back<address>(&mut entity.invoices, add);
   }  
 
-
-  /// Get the name of an entity
+  // Get the name of an entity
+  #[allow(unused_use)]
   public fun get_entity_name(entity: &Entity): &String {
     &entity.name
   }
 
-  /// Get the description of an entity
+  // Get the description of an entity
+  #[allow(unused_use)]
   public fun get_entity_description(entity: &Entity): &String {
     &entity.description
   }
 
-  /// Get the domicile of an entity
+  // Get the domicile of an entity
+  #[allow(unused_use)]
   public fun get_entity_domicile(entity: &Entity): &String {
     &entity.domicile
   }
 
-  /// Get the invoices of an entity
+  // Get the invoices of an entity
+  #[allow(unused_use)]
   public fun get_entity_invoices(entity: &Entity): &vector<address> {
     &entity.invoices
   }

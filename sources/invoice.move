@@ -9,7 +9,7 @@ module splitwise::invoice {
   use splitwise::splitwise::AdminCapability;
   // use splitwise::entity;
 
-  /// Invoice represents the invoice that is raised in the system
+  // Invoice represents the invoice that is raised in the system
   struct Invoice has key, store {
     id: UID,
     title: String,
@@ -26,7 +26,7 @@ module splitwise::invoice {
     invoice_id: String
   }
 
-  /// Create an Invoice
+  // Create an Invoice
   public fun create_invoice(
     _: &AdminCapability,
     title_bytes: vector<u8>,
@@ -53,27 +53,32 @@ module splitwise::invoice {
     invoice
   }
 
-  /// Get the title of an entity
+  // Get the title of an entity
+  #[allow(unused_use)]
   public fun get_invoice_title(invoice: &Invoice): &String {
     &invoice.title
   }
 
-  /// Get the invoice_id of an entity
+  // Get the invoice_id of an entity
+  #[allow(unused_use)]
   public fun get_invoice_invoice_id(invoice: &Invoice): &String {
     &invoice.invoice_id
   }
 
-  /// Get the payer of an entity
+  // Get the payer of an entity
+  #[allow(unused_use)]
   public fun get_invoice_payer(invoice: &Invoice): &String {
     &invoice.payer
   }
   
-  /// Get the payee of an entity
+  // Get the payee of an entity
+  #[allow(unused_use)]
   public fun get_invoice_payee(invoice: &Invoice): &String {
     &invoice.payee
   }
 
-  /// Get address of the invoice's id
+  // Get address of the invoice's id
+  #[allow(unused_use)]
   public fun get_invoice_address(invoice: &Invoice): address {
     object::id_address(invoice)
   }

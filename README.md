@@ -13,6 +13,7 @@ The Splitwise smart contract is designed for the SUI blockchain and allows users
 - [Functions](#functions)
 - [Test Cases](#test-cases)
 - [React App](#react-app)
+- [Local Dev](#local-dev)
 
 ## Structures
 
@@ -71,8 +72,19 @@ Test cases are provided to ensure the functionality of the smart contract.
 
 `app` dir contains the whole frontend of the app.
 
-<!-- Uncomment and modify this section if you have additional test cases -->
 
-<!--
-- `test_create_entity`: Tests the creation of a new entity within the system.
--->
+## Local dev
+
+> Make sure to have sui binaries installed.  
+Check with `sui --verison`
+
+To start the sui node
+```bash
+RUST_LOG="consensus=off" sui-test-validator
+```
+
+To publish the package
+```bash
+sui client publish --gas-budget 200000000 .
+```
+

@@ -1,5 +1,4 @@
 module splitwise::test_entity {
-  // use splitwise::entity::{Self};
   use sui::test_scenario;
   use std::string;
   use std::vector;
